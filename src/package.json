@@ -1,0 +1,32 @@
+{
+  "name": "wpp-web-broad",
+  "version": "0.0.1",
+  "description": "Selenium sofware that send automatically messages based on csv",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "jest": "jest --colors --verbose",
+    "test": "npm run jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phabh/wpp-web-broad.git"
+  },
+  "keywords": [
+    "selenium",
+    "whatsapp",
+    "broadcast"
+  ],
+  "author": "Paulo H Abreu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phabh/wpp-web-broad/issues"
+  },
+  "homepage": "https://github.com/phabh/wpp-web-broad#readme",
+  "dependencies": {
+    "chromedriver": "^85.0.1",
+    "fs": "0.0.1-security",
+    "jest": "^26.4.2",
+    "selenium-webdriver": "^4.0.0-alpha.7"
+  }
+}
