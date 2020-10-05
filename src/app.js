@@ -1,6 +1,8 @@
 const fs = require('fs');
 const chrome = require('selenium-webdriver/chrome');
 const chromedriver = require('chromedriver');
+const csv = require('csv-parser');
+const minimist = require('minimist');
 
 var chromeOptions = new chrome.Options();
 chromeOptions.addArguments("start-maximized")
@@ -31,24 +33,43 @@ const sendMessageAsync  = async (phone, message) => {
     await inputMessage.click();    
 };
 
-const startBrowser = async () => {
-    await sendMessageAsync('xxxxxxxx', 'opa e ai Avelino?');
-    await driver.sleep(5000);
-    await sendMessageAsync('xxxxxxxx', 'Legal, olha só o que tenho pra você');
-    await driver.sleep(5000);
-    await sendMessageAsync('xxxxxxxx', 'Bom demais né!');
-    await driver.sleep(5000);
-    await sendMessageAsync('xxxxxxxx', 'Só falar comigo');
-    await driver.sleep(5000);
-    await sendMessageAsync('xxxxxxxx', 'Ta sussa');
-    await driver.sleep(5000);
+const startBrowser = async (rowList) => {
 
+    for (row of rowList) {
+        await sendMessageAsync(row.numero, row.mensagem);
+        await driver.sleep(2000);
+    }
+
+    await driver.sleep(5000);
     driver.quit();
 };
 
+const readFile = (fileName, sep, callback) => {
+    let rowList = [];
+    if (!fs.existsSync(fileName)) {
+        throw `File '${fileName}' not exists`;
+    }
 
 
-startBrowser().then();
+    fs.createReadStream(fileName)
+    .pipe(csv({ separator: sep }))
+    .on('data', (row) => {
+        rowList.push(row);
+    })
+    .on('end', () => {
+      console.log('CSV file successfully processed');
+      callback(rowList);
+    });
+}
+
+let args = minimist(process.argv.slice(2), {
+    fileName: './data.csv',
+    separator: '|'
+});
+
+readFile(args.fileName, args.separator, (rowList) => {
+        startBrowser(rowList).then();
+});
 
 async function waitUntilElementWithTextExists(className, tagName) {
     let elementExists = false;
